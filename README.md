@@ -1,1 +1,2 @@
 # tic-tac-toe
+This repository is a simple Tic Tac Toe game desgined to be played in a users terminal. The game begins as soon as the program is run, and users select spots by entering the corresponding numbers on the 9x9 grid.
