@@ -1,13 +1,17 @@
 # frozen_string_literal: true
 
+module TicTacToe
+  LINES = [
+    [1, 2, 3], [4, 5, 6], [7, 8, 9], [1, 4, 7], [2, 5, 8],
+    [3, 6, 9], [1, 5, 9], [3, 5, 7]
+  ]
+end
+
 # models a Tic Tac Toe game
 class Game
+  include TicTacToe
   def initialize(player1, player2)
-    @board = %w[
-      a b c
-      d e f
-      g h i
-    ]
+    @board = Array.new(10)
 
     @players = [player1, player2]
 
@@ -21,9 +25,14 @@ class Game
       display_board
       current_player = select_player(turn)
       get_choice(current_player)
-      if board_full?(turn)
-        puts 'Game over.'
-        break
+      if player_win?(current_player)
+        display_board
+        puts "#{current_player.name} wins!"
+        return
+      elsif board_full?
+        display_board
+        puts "\nGame tie."
+        return
       end
       turn += 1
     end
@@ -32,17 +41,19 @@ class Game
   protected
 
   def display_board
-    puts "#{@board[0]} | #{@board[1]} | #{@board[2]}"
-    puts '----------'
-    puts "#{@board[3]} | #{@board[4]} | #{@board[5]}"
-    puts '----------'
-    puts "#{@board[6]} | #{@board[7]} | #{@board[8]}"
+    col_separator, row_separator = " | ", "--+---+--"
+    label_for_position = lambda{|position| @board[position] ? @board[position] : position}
+
+    row_for_display = lambda{|row| row.map(&label_for_position).join(col_separator)}
+    row_positions = [[1,2,3], [4,5,6], [7,8,9]]
+    rows_for_display = row_positions.map(&row_for_display)
+    puts rows_for_display.join("\n" + row_separator + "\n")
   end
 
   private
 
-  def vaild_position?(choice)
-    @board.include?(choice) ? true : false
+  def free_positions
+    (1..9).select { |position| @board[position].nil? }
   end
 
   def select_player(turn)
@@ -55,22 +66,24 @@ class Game
 
   def get_choice(player)
     print "\n#{player.name}: "
-    choice = gets.chomp
-    if vaild_position?(choice)
-      @board[@board.index(choice)] = player.marker
+    begin
+      choice = Integer(gets.chomp)
+    rescue ArgumentError
+      puts 'Please enter a valid number'
+      get_choice(player)
     else
-      invalid_choice(player)
+      @board[choice] = player.marker
     end
   end
 
-  def invalid_choice(player)
-    puts 'Selection invalid.'
-    display_board
-    get_choice(player)
+  def player_win?(player)
+    LINES.any? do |line|
+      line.all? { |position| @board[position] == player.marker }
+    end
   end
 
-  def board_full?(turn)
-    true if turn >= 8
+  def board_full?
+    free_positions.empty?
   end
 end
 
