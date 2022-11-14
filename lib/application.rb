@@ -1,40 +1,36 @@
 # frozen_string_literal: true
 
-module TicTacToe
+module WinLines
   LINES = [
     [1, 2, 3], [4, 5, 6], [7, 8, 9], [1, 4, 7], [2, 5, 8],
     [3, 6, 9], [1, 5, 9], [3, 5, 7]
   ]
 end
 
-# models a Tic Tac Toe game
-class Game
-  include TicTacToe
+# models a Tic Tac Toe TicTacToe
+class TicTacToe
+  include WinLines
   def initialize(player1, player2)
     @board = Array.new(10)
-
     @players = [player1, player2]
-
-    puts 'Player 1 goes first'
-    play
+    @current_player = @players[1]
   end
 
   def play
-    turn = 0
+    puts 'Player 1 goes first'
     loop do
       display_board
-      current_player = select_player(turn)
-      get_choice(current_player)
-      if player_win?(current_player)
+      select_player
+      get_choice(@current_player)
+      if player_win?(@current_player)
         display_board
-        puts "#{current_player.name} wins!"
+        puts "#{@current_player.name} wins!"
         return
       elsif board_full?
         display_board
         puts "\nGame tie."
         return
       end
-      turn += 1
     end
   end
 
@@ -56,12 +52,9 @@ class Game
     (1..9).select { |position| @board[position].nil? }
   end
 
-  def select_player(turn)
-    if turn.even?
-      @players[0]
-    else
-      @players[1]
-    end
+  def select_player
+    @current_player =
+      @current_player == @players[0] ? @players[1] : @players[0]
   end
 
   def get_choice(player)
@@ -97,4 +90,4 @@ class Player
   end
 end
 
-Game.new(Player.new('Player 1', 'X'), Player.new('Player 2', 'O'))
+TicTacToe.new(Player.new('Player 1', 'X'), Player.new('Player 2', 'O')).play
