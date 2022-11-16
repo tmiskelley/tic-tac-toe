@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module WinLines
   LINES = [
     [1, 2, 3], [4, 5, 6], [7, 8, 9], [1, 4, 7], [2, 5, 8],
@@ -89,5 +87,3 @@ class Player
     @marker = marker
   end
 end
-
-TicTacToe.new(Player.new('Player 1', 'X'), Player.new('Player 2', 'O')).play
