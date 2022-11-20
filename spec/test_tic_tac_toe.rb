@@ -28,6 +28,36 @@ describe TicTacToe do
     end
   end
 
+  describe '#get_choice' do
+    let(:player1) { double(name: 'player1', marker: 'X') }
+    let(:player2) { double(name: 'player2', marker: 'O') }
+    subject(:tictactoe) { described_class.new(player1, player2) }
+
+    context 'when player 1 picks an empty spot' do
+      before do
+        allow(tictactoe).to receive(:gets).and_return('5')
+      end
+
+      it "updates spot to player 1's marker" do
+        tictactoe.send(:get_choice, player1)
+        spots = tictactoe.instance_variable_get(:@board)
+        expect(spots[5]).to eq('X')
+      end
+    end
+
+    context 'when player 2 picks an empty spot' do
+      before do
+        allow(tictactoe).to receive(:gets).and_return('1')
+      end
+
+      it "updates spot to player 2's marker" do
+        tictactoe.send(:get_choice, player1)
+        spots = tictactoe.instance_variable_get(:@board)
+        expect(spots[1]).to eq('X')
+      end
+    end
+  end
+
   describe '#player_win?' do
     let(:player1) { double('player1', marker: 'X') }
     let(:player2) { double('player2') }

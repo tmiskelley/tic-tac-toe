@@ -19,6 +19,7 @@ class TicTacToe
     loop do
       display_board
       select_player
+      print "\n#{@current_player.name}: "
       get_choice(@current_player)
       if player_win?(@current_player)
         display_board
@@ -56,7 +57,6 @@ class TicTacToe
   end
 
   def get_choice(player)
-    print "\n#{player.name}: "
     begin
       choice = Integer(gets.chomp)
     rescue ArgumentError
