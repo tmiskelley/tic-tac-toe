@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 module WinLines
   LINES = [
     [1, 2, 3], [4, 5, 6], [7, 8, 9], [1, 4, 7], [2, 5, 8],
     [3, 6, 9], [1, 5, 9], [3, 5, 7]
-  ]
+  ].freeze
 end
 
 # models a Tic Tac Toe TicTacToe
@@ -60,10 +62,9 @@ class TicTacToe
     begin
       choice = Integer(gets.chomp)
     rescue ArgumentError
-      puts 'Please enter a valid number'
-      get_choice(player)
+      invalid_input(player, choice)
     else
-      @board[choice] = player.marker
+      @board[choice].nil? ? @board[choice] = player.marker : invalid_input(player, choice)
     end
   end
 
@@ -75,6 +76,18 @@ class TicTacToe
 
   def board_full?
     free_positions.empty?
+  end
+
+  def invalid_input(player, choice)
+    spot_taken = 'Spot is already taken! Please select an open spot'
+    invalid_entry = 'Please enter a valid number'
+
+    message = choice.instance_of?(Integer) ? spot_taken : invalid_entry
+
+    puts message
+    display_board
+    print "\n#{@current_player.name}: "
+    get_choice(player)
   end
 end
 
