@@ -56,6 +56,34 @@ describe TicTacToe do
         expect(spots[1]).to eq('X')
       end
     end
+
+    context 'when the current player picks a non-empty spot' do
+      before do
+        test_board = [nil, nil, nil, nil, nil, 'X', nil, nil, nil, nil, nil]
+        filled_spot = '5'
+        empty_spot = '1'
+        tictactoe.instance_variable_set(:@board, test_board)
+        allow(tictactoe).to receive(:gets).and_return(filled_spot, empty_spot)
+      end
+
+      it 'returns an error message' do
+        expect(tictactoe).to receive(:invalid_input).once
+        tictactoe.send(:get_choice, player2)
+      end
+    end
+
+    context 'when the current player enters a non-integer input' do
+      before do
+        letter = 'a'
+        valid_entry = '5'
+        allow(tictactoe).to receive(:gets).and_return(letter, valid_entry)
+      end
+
+      it 'returns an error message' do
+        expect(tictactoe).to receive(:invalid_input).once
+        tictactoe.send(:get_choice, player1)
+      end
+    end
   end
 
   describe '#player_win?' do
