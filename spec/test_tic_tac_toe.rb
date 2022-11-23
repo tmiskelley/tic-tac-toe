@@ -110,4 +110,32 @@ describe TicTacToe do
       end
     end
   end
+
+  describe '#board_full?' do
+    let(:player1) { double('player1') }
+    let(:player2) { double('player2') }
+    subject(:tictactoe) { described_class.new(player1, player2) }
+
+    context 'when the board is full' do
+      before do
+        full_board = [nil, 'O', 'X', 'X', 'X', 'X', 'O', 'O', 'O', 'X']
+        tictactoe.instance_variable_set(:@board, full_board)
+      end
+
+      it 'returns true' do
+        expect(tictactoe.send(:board_full?)).to be(true)
+      end
+    end
+
+    context 'when the board is NOT full' do
+      before do
+        full_board = [nil, 'O', nil, 'X', 'X', 'X', 'O', 'O', nil, 'X']
+        tictactoe.instance_variable_set(:@board, full_board)
+      end
+
+      it 'returns false' do
+        expect(tictactoe.send(:board_full?)).to be(false)
+      end
+    end
+  end
 end
