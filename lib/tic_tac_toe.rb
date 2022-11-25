@@ -17,22 +17,10 @@ class TicTacToe
   end
 
   def play
-    puts 'Player 1 goes first'
-    loop do
-      display_board
-      select_player
-      print "\n#{@current_player.name}: "
-      get_choice(@current_player)
-      if player_win?(@current_player)
-        display_board
-        puts "#{@current_player.name} wins!"
-        return
-      elsif board_full?
-        display_board
-        puts "\nGame tie."
-        return
-      end
-    end
+    select_player
+    display_board
+    get_choice(@current_player)
+    check_game_over
   end
 
   protected
@@ -45,6 +33,8 @@ class TicTacToe
     row_positions = [[1,2,3], [4,5,6], [7,8,9]]
     rows_for_display = row_positions.map(&row_for_display)
     puts rows_for_display.join("\n" + row_separator + "\n")
+
+    print "\n#{@current_player.name}: " unless player_win?(@current_player) || board_full?
   end
 
   private
@@ -86,8 +76,19 @@ class TicTacToe
 
     puts message
     display_board
-    print "\n#{@current_player.name}: "
     get_choice(player)
+  end
+
+  def check_game_over
+    if player_win?(@current_player)
+      display_board
+      puts "#{@current_player.name} wins!"
+    elsif board_full?
+      display_board
+      puts "\nGame tie."
+    else
+      play
+    end
   end
 end
 
